@@ -1,4 +1,5 @@
 import numpy as np
+#from numpy import ndarray
 from Assignment02 import laminatelib
 
 # Engineering constants for the orthotropic material in the 1'-2'-3' coordinate system
@@ -44,4 +45,26 @@ np.set_printoptions(precision=2, suppress=True)
 print("The stiffness matrix in the 1-2-3 coordinate system for case A:\n", C_A, "\n")
 print("The stiffness matrix in the 1-2-3 coordinate system for case B:\n", C_B, "\n")
 print("The stiffness matrix in the 1-2-3 coordinate system for case C:\n", C_C, "\n")
+
+
+# Now onto calculating the engineering constants in the 1-2-3 coordinate system for each case
+def compute_engineering_constants(C: np.ndarray) -> dict:
+    S = np.linalg.inv(C)
+    engineering_constants = {}
+    engineering_constants["E_1"] = 1/S[0, 0]
+    engineering_constants["E_2"] = 1/S[1, 1]
+    engineering_constants["E_3"] = 1/S[2, 2]
+    engineering_constants["G_23"] = 1/S[3, 3]
+    engineering_constants["G_13"] = 1/S[4, 4]
+    engineering_constants["G_12"] = 1/S[5, 5]
+    engineering_constants["v_12"] = -S[0, 1]/S[0, 0]
+    engineering_constants["v_13"] = -S[0, 2]/S[0, 0]
+    engineering_constants["v_23"] = -S[1, 2]/S[1, 1]
+
+    return engineering_constants
+
+# Print the engineering constants in the 1-2-3 coordinate system for each case
+print("The engineering constants in the 1-2-3 coordinate system for case A:\n", compute_engineering_constants(C_A), "\n")
+print("The engineering constants in the 1-2-3 coordinate system for case B:\n", compute_engineering_constants(C_B), "\n")
+print("The engineering constants in the 1-2-3 coordinate system for case C:\n", compute_engineering_constants(C_C), "\n")
 
