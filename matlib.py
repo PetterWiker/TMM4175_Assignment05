@@ -28,6 +28,20 @@ materials.append( {"name": "Carbon/Epoxy(a)", "units": "MPa-mm-Mg", "type": "UD"
                    "S12": 70, "S13": 70, "S23": 40,
                    "f12": -0.5, "f13": -0.5, "f23": -0.5} )
 
+# The material used in TMM4175 assignment 05, problem 3
+
+materials.append( {"name": "Kevlar-49/Epoxy", "units": "MPa-mm-Mg", "type": "UD", "fiber": "Kevlar-49",
+                   "Vf": 0.55, "rho": 1400E-12,
+                   "description": "Typical UD Kevlar-49/Epoxy from TMM4175",
+                   "E1": 73000, "E2": 5000, "E3": 5000,
+                   "v12": 0.35, "v13": 0.35, "v23": 0.45,
+                   "G12": 2200, "G13": 2200, "G23": 1700,
+                   "a1": -1e-06, "a2": 5.0e-05, "a3": 5.0e-05,
+                   "XT": 1400, "YT": 20, "ZT": 20,
+                   "XC": 300, "YC": 120, "ZC": 120,
+                   "S12": 40, "S13": 40, "S23": 20,
+                   "f12":-0.5, "f13":-0.5, "f23":-0.5} )
+
 
 def get(matname):
     for m in materials:
