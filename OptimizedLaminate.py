@@ -19,14 +19,12 @@ class OptimizedLaminate(Laminate):
         # If not, the laminate is broken and cannot be optimized by reducing the ply thickness.
         adjustment_factor = max(exposure_factors)
 
-        current_ply_thickness = laminate.layup[0].thickness
-        optimized_combined_layer_thickness = current_ply_thickness*adjustment_factor
-        n_new_plies_per_combined_layer = optimized_combined_layer_thickness // ply_thickness
-        if optimized_combined_layer_thickness % ply_thickness:
-            n_new_plies_per_combined_layer += 1
-
         updated_layup = []
         for ply in laminate.layup:
+            optimized_combined_layer_thickness = ply.thickness*adjustment_factor
+            n_new_plies_per_combined_layer = optimized_combined_layer_thickness // ply_thickness
+            if optimized_combined_layer_thickness % ply_thickness:
+                n_new_plies_per_combined_layer += 1
             for i in range(int(n_new_plies_per_combined_layer)):
                 updated_layup.append(Ply(material=ply.material, orientation=ply.orientation, thickness=ply_thickness))
 
@@ -39,11 +37,14 @@ class OptimizedLaminate(Laminate):
         pass
 
     def __repr__(self) -> str:
-        return "I am an optimized laminate '{}' that " \
-               "saved you {} % mass over the suboptimal '{}' for the load case {}. Yay!".format(self.name,
-                                                                                        round(self.mass_reduction, 2),
-                                                                                        self.suboptimal_laminate.name,
-                                                                                        self.optimized_load_case)
+        return "I am the {} mm thick optimized laminate '{}' that " \
+               "saved you {} % mass over the {} mm thick suboptimal laminate" \
+               " '{}' for the load case {}. Nice!".format(round(self.thickness, 2),
+                                                          self.name,
+                                                          round(self.mass_reduction, 2),
+                                                          round(self.suboptimal_laminate.thickness, 2),
+                                                          self.suboptimal_laminate.name,
+                                                          self.optimized_load_case)
 
 
 def main():
@@ -52,7 +53,7 @@ def main():
     THICKNESS = 1
     ALTERNATIVE_THICKNESS = 0.1
     LOAD_CASE = {"Nx": 600, "Nxy": 300}
-    DEFORMATION_LIMITS = [0.005, None, 0.005, None, None, None]
+    DEFORMATION_LIMITS = [0.005, None, 0.005]
 
     layup = [Ply(material=material, orientation=0,   thickness=THICKNESS),
              Ply(material=material, orientation=45,  thickness=THICKNESS),
