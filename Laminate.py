@@ -54,3 +54,13 @@ class Laminate:
         Gxy = (1/self.thickness)*self.A[2, 2]
         vxy = self.A[0, 1]/self.A[1, 1]
         return Ex, Ey, Gxy, vxy
+
+    def calculate_exposure_factors(self, load_case: dict, deformation_limits: list) -> list:
+        loads, deformations = laminatelib.solveLaminateLoadCase(self.compute_ABD(), **load_case)
+        exposure_factors = []
+        for idx, deformation_limit in enumerate(deformation_limits):
+            if deformation_limit is not None:
+                exposure_factors.append(deformations[idx]/deformation_limit)
+            else:
+                exposure_factors.append(0)
+        return exposure_factors
