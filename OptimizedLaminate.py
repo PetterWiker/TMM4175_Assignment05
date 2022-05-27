@@ -1,11 +1,6 @@
 import copy
-import xlsxwriter
-import numpy as np
 from operator import attrgetter
-import matplotlib.pyplot as plt
-
-from Assignment05 import matlib
-from Assignment03 import laminatelib
+import matlib
 from Laminate import Laminate
 from Ply import Ply
 
@@ -35,7 +30,8 @@ class OptimizedLaminate(Laminate):
             self.branch_optimal_laminates = []
             unique_orientations = list(set([ply.orientation for ply in updated_layup]))
             tmp_laminate = Laminate(layup=updated_layup, name="")
-            #super_optimized_laminate = self.strip_ply(orientations=unique_orientations, laminate=tmp_laminate)
+
+            # Do the recursive iteration, filling the self.branch_optimal_laminates list
             self.strip_ply(orientations=unique_orientations, laminate=tmp_laminate)
             optimized_laminate = min(self.branch_optimal_laminates, key=attrgetter("thickness"))
             updated_layup = optimized_laminate.layup
@@ -86,12 +82,14 @@ class OptimizedLaminate(Laminate):
     def __repr__(self) -> str:
         return "I am the {} mm thick optimized laminate '{}' that " \
                "saved you {} % mass over the {} mm thick suboptimal laminate" \
-               " '{}' for the load case {}. Nice!".format(round(self.thickness, 2),
-                                                          self.name,
-                                                          round(self.mass_reduction, 2),
-                                                          round(self.suboptimal_laminate.thickness, 2),
-                                                          self.suboptimal_laminate.name,
-                                                          self.optimized_load_case)
+               " '{}' for the load case {}. Nice!\nMy exposure factors are {}".format(round(self.thickness, 2),
+                                                                                      self.name,
+                                                                                      round(self.mass_reduction, 2),
+                                                                                      round(self.suboptimal_laminate.thickness, 2),
+                                                                                      self.suboptimal_laminate.name,
+                                                                                      self.optimized_load_case,
+                                                                                      self.calculate_exposure_factors(self.optimized_load_case,
+                                                                                                                      self.deformation_limits))
 
 
 def main():
@@ -110,12 +108,23 @@ def main():
              Ply(material=material, orientation=0,   thickness=THICKNESS)]
 
     laminate = Laminate(layup=layup, name="Kevlar_Laminate")
-    optimized_laminate = OptimizedLaminate(laminate=laminate,
-                                           ply_thickness=ALTERNATIVE_THICKNESS,
-                                           load_case=LOAD_CASE,
-                                           deformation_limits=DEFORMATION_LIMITS)
-    print(optimized_laminate)
-    print(optimized_laminate.calculate_exposure_factors(LOAD_CASE, DEFORMATION_LIMITS))
+
+    # Optimization using the simple algorithm detailed in the assignment report
+    simple_optimized_laminate = OptimizedLaminate(laminate=laminate,
+                                                  ply_thickness=ALTERNATIVE_THICKNESS,
+                                                  load_case=LOAD_CASE,
+                                                  deformation_limits=DEFORMATION_LIMITS,
+                                                  hard_optimization=False)
+    print(simple_optimized_laminate)
+
+    # Optimization using the more advanced algorithm detailed in the assignment report
+    advanced_optimized_laminate = OptimizedLaminate(laminate=laminate,
+                                                    ply_thickness=ALTERNATIVE_THICKNESS,
+                                                    load_case=LOAD_CASE,
+                                                    deformation_limits=DEFORMATION_LIMITS,
+                                                    hard_optimization=True)
+    print(advanced_optimized_laminate)
+
     pass
 
 

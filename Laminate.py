@@ -41,10 +41,10 @@ class Laminate:
             Q = laminatelib.Q2D(ply.material)
             Qt = laminatelib.Q2Dtransform(Q, ply.orientation)
             h_top = h_bot + ply.thickness
-            ABD[0:3,0:3] += Qt*(h_top-h_bot)
-            ABD[0:3,3:6] += (1/2)*Qt*(h_top**2-h_bot**2)
-            ABD[3:6,0:3] += (1/2)*Qt*(h_top**2-h_bot**2)
-            ABD[3:6,3:6] += (1/3)*Qt*(h_top**3-h_bot**3)
+            ABD[0:3, 0:3] += Qt*(h_top-h_bot)
+            ABD[0:3, 3:6] += (1/2)*Qt*(h_top**2-h_bot**2)
+            ABD[3:6, 0:3] += (1/2)*Qt*(h_top**2-h_bot**2)
+            ABD[3:6, 3:6] += (1/3)*Qt*(h_top**3-h_bot**3)
             h_bot = h_top
         return ABD
 

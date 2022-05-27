@@ -1,6 +1,5 @@
 import numpy as np
-#from numpy import ndarray
-from Assignment02 import laminatelib
+import laminatelib
 
 # Engineering constants for the orthotropic material in the 1'-2'-3' coordinate system
 E_1 = 50
@@ -60,11 +59,9 @@ def compute_engineering_constants(C: np.ndarray) -> dict:
     engineering_constants["v_12"] = -S[0, 1]/S[0, 0]
     engineering_constants["v_13"] = -S[0, 2]/S[0, 0]
     engineering_constants["v_23"] = -S[1, 2]/S[1, 1]
-
     return engineering_constants
 
 # Print the engineering constants in the 1-2-3 coordinate system for each case
 print("The engineering constants in the 1-2-3 coordinate system for case A:\n", compute_engineering_constants(C_A), "\n")
 print("The engineering constants in the 1-2-3 coordinate system for case B:\n", compute_engineering_constants(C_B), "\n")
 print("The engineering constants in the 1-2-3 coordinate system for case C:\n", compute_engineering_constants(C_C), "\n")
-

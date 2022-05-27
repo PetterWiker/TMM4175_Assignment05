@@ -76,6 +76,7 @@ class LaminateTestBench:
     def calculate_effective_properties(self, layup: list[Ply], orientation: float) -> None:
         rotated_layup = self.substitute_layup_orientation(layup=layup, new_orientation=orientation)
         laminate = Laminate(layup=rotated_layup, name="base_laminate")
+        np.set_printoptions(precision=2, suppress=True)
         Ex0, Ey0, Gxy0, vxy0 = laminate.calculate_laminate_properties()
 
         for i, E2_correction in enumerate(self.E2s):
@@ -86,10 +87,10 @@ class LaminateTestBench:
                 corrected_layup = self.substitute_layup_material(layup=rotated_layup, substitute=m)
                 laminate = Laminate(layup=corrected_layup, name="{}_{}_{}".format(self.material["name"], i, j))
                 Ex, Ey, Gxy, vxy = laminate.calculate_laminate_properties()
-                self.Exs[i, j] = 100*(Ex-Ex0)/Ex0
-                self.Eys[i, j] = 100*(Ey-Ey0)/Ey0
-                self.Gxys[i, j] = 100*(Gxy-Gxy0)/Gxy0
-                self.vxys[i, j] = 100*(vxy-vxy0)/vxy0
+                self.Exs[j, i] = 100*(Ex-Ex0)/Ex0
+                self.Eys[j, i] = 100*(Ey-Ey0)/Ey0
+                self.Gxys[j, i] = 100*(Gxy-Gxy0)/Gxy0
+                self.vxys[j, i] = 100*(vxy-vxy0)/vxy0
         pass
 
     def plot_surfaces(self) -> None:
@@ -112,7 +113,6 @@ class LaminateTestBench:
             ax.set_zlim(-100, 100)
             ax.set_xlabel("E_2 (% dev)")
             ax.set_ylabel("G_12 (% dev)")
-
         pass
 
     def plot_layup_surface(self, layup: list[Ply], layup_name: str) -> None:
